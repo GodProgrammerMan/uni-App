@@ -1,0 +1,66 @@
+@using System.Web.Http
+@using System.Web.Http.Description 
+@using WebAPI 
+@model HelpPageApiModel
+
+@{
+    ApiDescription description = Model.ApiDescription;
+}
+<h1>@description.HttpMethod.Method @description.RelativePath</h1>
+<div>
+    <p>@description.Documentation</p>
+
+    <h2>请求的信息</h2>
+
+    <h3>Get请求参数</h3>
+    @Html.DisplayFor(m => m.UriParameters, "Parameters")
+
+    <h3>Post请求参数</h3>
+
+    <p>@Model.RequestDocumentation</p>
+
+    @if (Model.RequestModelDescription != null)
+    {
+        @Html.DisplayFor(m => m.RequestModelDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.RequestModelDescription })
+        if (Model.RequestBodyParameters != null)
+        {
+            @Html.DisplayFor(m => m.RequestBodyParameters, "Parameters")
+        }
+    }
+    else
+    {
+        <p>None.</p>
+    }
+
+    @if (Model.SampleRequests.Count > 0)
+    {
+        <h3>Request Formats</h3>
+        @Html.DisplayFor(m => m.SampleRequests, "Samples")
+    }
+
+    <h2>响应信息</h2>
+
+    <h3>描述 ret 说明：0正常返回  1参数错误   2鉴权失败   3内部错误  4其它错误  5没有记录  6分页数据没有记录了</h3>
+
+    <p>@description.ResponseDescription.Documentation</p>
+
+    @if (Model.ResourceDescription != null)
+    {
+        @Html.DisplayFor(m => m.ResourceDescription.ModelType, "ModelDescriptionLink", new { modelDescription = Model.ResourceDescription })
+        if (Model.ResourceProperties != null)
+        {
+            @Html.DisplayFor(m => m.ResourceProperties, "Parameters")
+        }
+    }
+    else
+    {
+        <p>None.</p>
+    }
+
+    @if (Model.SampleResponses.Count > 0)
+    {
+        <h3>响应格式</h3>
+        @Html.DisplayFor(m => m.SampleResponses, "Samples")
+    }
+
+</div>

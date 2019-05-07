@@ -1,0 +1,69 @@
+@using System.Collections.Generic
+@using System.Collections.ObjectModel
+@using System.Web.Http.Description
+@using System.Threading
+@using WebAPI
+@model IList<ParameterDescription>
+
+@if (Model.Count > 0)
+{
+    <table class="help-page-table">
+        <thead>
+            <tr><th>响应参数</th><th>说明</th><th>数据类型</th><th>描述</th></tr>
+        </thead>
+        <tbody>
+            @foreach (ParameterDescription parameter in Model)
+            {
+                ModelDescription modelDescription = parameter.TypeDescription;
+                var Documentation = "";
+                if (parameter.Name == "Success")
+                {
+                    Documentation = "是否返回正确,true表示正确,false出错";
+                }
+                if (parameter.Name == "ret")
+                {
+                    Documentation = "0正常返回  1参数错误   2鉴权失败   3内部错误  4其它错误  5没有记录  6分页数据没有记录了";
+                }
+                if (parameter.Name == "Result")
+                {
+                    Documentation = "返回消息";
+                }
+                if (parameter.Name == "Content")
+                {
+                    Documentation = "返回的数据对象";
+                }
+                if (Documentation == "")
+                {
+                    Documentation = parameter.Documentation;
+                }
+                <tr>
+                    <td class="parameter-name">@parameter.Name</td>
+                    <td class="parameter-documentation">
+                        <p>@Documentation</p>
+                    </td>
+                    <td class="parameter-type">
+                        @Html.DisplayFor(m => modelDescription.ModelType, "ModelDescriptionLink", new { modelDescription = modelDescription })
+                    </td>
+                    <td class="parameter-annotations">
+                        @if (parameter.Annotations.Count > 0)
+                        {
+                            foreach (var annotation in parameter.Annotations)
+                            {
+                                <p>@annotation.Documentation</p>
+                            }
+                        }
+                        else
+                        {
+                            <p>None.</p>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>None.</p>
+}
+
